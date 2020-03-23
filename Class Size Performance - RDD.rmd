@@ -1,0 +1,48 @@
+
+```{r setup, include=FALSE}
+library(corrplot)
+library(rddtools)
+```
+
+```{r}
+data <- read.csv("class.csv")
+summary(data)
+```
+
+```{r}
+cor(data$class_size, data$mean_test_score)
+cor.test(data$class_size, data$mean_test_score)
+```
+
+```{r}
+correlation <- cor(data)
+corrplot(correlation)
+```
+
+```{r}
+plot(data)
+```
+
+```{r}
+#set a cut off point to separate the estimates
+rdd_data <- rdd_data(data$mean_test_score, data$class_size, cutpoint = 29.5)
+#plot
+plot(rdd_data, col = 'steelblue', cex = .55, xlab = 'class_size', ylab = 'mean_score')
+```
+
+```{r}
+#estimate the RDD model
+rdd_mod <- rdd_reg_lm(rdd_data, slope = "separate")
+summary(rdd_mod)
+```
+
+```{r}
+#the coefficient of estimate is D = -10.36916
+# plot the RDD model
+plot(rdd_mod,
+     cex = 0.55, 
+     col = "steelblue", 
+     xlab = "class_size", 
+     ylab = "mean_score")
+```
+
